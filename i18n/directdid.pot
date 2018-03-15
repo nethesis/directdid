@@ -1,0 +1,102 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2018-03-15 11:53+0100\n"
+"PO-Revision-Date: 2018-03-15 12:03+0100\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: it_IT\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.0.6\n"
+"X-Poedit-Basepath: ..\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: Directdid.class.php:81
+msgid "Submit"
+msgstr ""
+
+#: Directdid.class.php:94
+msgid "Direct DID Options"
+msgstr ""
+
+#: install.php:23
+msgid "Creating the database table"
+msgstr ""
+
+#: install.php:48
+msgid "Table Created"
+msgstr ""
+
+#: install.php:50 uninstall.php:36
+msgid "Something went wrong"
+msgstr ""
+
+#: uninstall.php:24
+msgid "Removing the database table"
+msgstr ""
+
+#: uninstall.php:34
+msgid "Table Deleted"
+msgstr ""
+
+#: views/default.php:24
+msgid "Direct DID"
+msgstr ""
+
+#: views/form.php:34
+msgid "Timeout"
+msgstr ""
+
+#: views/form.php:44
+msgid ""
+"Ringing timeout before going to timeout destination. Minimum value: 5 "
+"Maximum value: 30"
+msgstr ""
+"Tempo di squillo prima di andare nella destinazione di timeout. Valore "
+"minimo: 5, valore massimo: 20"
+
+#: views/form.php:58
+msgid "Timeout Destination"
+msgstr ""
+
+#: views/form.php:68
+msgid "Destination when timeout is reached"
+msgstr ""
+
+#: views/form.php:76
+msgid "Busy Destination"
+msgstr ""
+
+#: views/form.php:86
+msgid "Destination if user is busy"
+msgstr ""
+
+#: views/form.php:94
+msgid "Unavailable Destination"
+msgstr ""
+
+#: views/form.php:104
+msgid "Destination if user is not reachable"
+msgstr ""
+
+#: views/form.php:112
+msgid "Alert Info"
+msgstr ""
+
+#: views/form.php:120
+msgid "ALERT_INFO can be used for distinctive ring with SIP devices."
+msgstr ""
+
+#: views/form.php:128
+msgid "CID Name Prefix"
+msgstr ""
+
+#: views/form.php:136
+msgid ""
+"You can optionally prefix the CallerID name when ringing extensions in this "
+"group. ie: If you prefix with \"Sales:\", a call from John Doe would display "
+"as \"Sales:John Doe\" on the extensions that ring."
+msgstr ""
