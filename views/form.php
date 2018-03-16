@@ -69,42 +69,6 @@ echo $module_hook->hookHtml;
         </div>
     </div>
     <!--END TIMEOUT DESTINATION-->
-    <!--BUSY DESTINATION-->
-    <div class="row">
-        <div class="form-group">
-            <div class="col-md-4">
-                <label class="control-label" for="busy_destination"><?php echo _("Busy Destination") ?></label>
-                <i class="fa fa-question-circle fpbx-help-icon" data-for="busy_destination"></i>
-            </div>
-            <div class="col-md-7">
-                <?php echo drawselects($config['busy_destination'],'busy_destination',false,false)?>
-            </div>
-        </div>    
-    </div>
-    <div class="row">
-        <div class="col-md-12">
-            <span id="busy_destination-help" class="help-block fpbx-help-block"><?php echo _("Destination if user is busy")?></span>
-        </div>
-    </div>
-    <!--END BUSY DESTINATION-->
-    <!--UNAVAILABLE DESTINATION-->
-    <div class="row">
-        <div class="form-group">
-            <div class="col-md-4">
-                <label class="control-label" for="unavailable_destination"><?php echo _("Unavailable Destination") ?></label>
-                <i class="fa fa-question-circle fpbx-help-icon" data-for="unavailable_destination"></i>
-            </div>
-            <div class="col-md-7">
-                <?php echo drawselects($config['unavailable_destination'],'unavailable_destination',false,false)?>
-            </div>
-        </div>    
-    </div>
-    <div class="row">
-        <div class="col-md-12">
-            <span id="unavailable_destination-help" class="help-block fpbx-help-block"><?php echo _("Destination if user is not reachable")?></span>
-        </div>
-    </div>
-    <!--END UNAVAILABLE DESTINATION-->
     <!--Alert Info-->
     <div class="row">
         <div class="form-group">

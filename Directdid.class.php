@@ -47,8 +47,8 @@ class Directdid implements \BMO {
 		switch ($action) {
                     case 'save':
                         $dbh = \FreePBX::Database();
-                        # get destinations for 'timeout_destination','busy_destination','unavailable_destination'
-                        foreach (['timeout_destination','busy_destination','unavailable_destination'] as $key) {
+                        # get destinations for 'timeout_destination'
+                        foreach (['timeout_destination'] as $key) {
                             if (isset($_REQUEST['goto'.$key]) && isset($_REQUEST[$_REQUEST['goto'.$key].$key])) {
                                 $destination = $_REQUEST[$_REQUEST['goto'.$key].$key];
                             } else {
