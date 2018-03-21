@@ -62,9 +62,18 @@ function directdid_get_config($engine){
                 # show only main extensions
                 if (preg_match('/^9[0-9][0-9][0-9][0-9]/',$result['0'])) continue;
                 # add ring and stuff foreach extension
-                $extension = $result['0'];
-                $ext->add($contextname, $extension, '', new ext_noop('Ring stuff here '.$extension));
-                $ext->add($contextname, $extension, '', new ext_goto('commondest'));
+		$extension = $result['0'];
+		$ext->add($contextname, $extension, '', new ext_playtones('ring'));
+                $ext->add($contextname, $extension, '', new ext_progress());
+                $ext->add($contextname, $extension, '', new ext_macro('user-callerid'));
+                $ext->add($contextname, $extension, '', new ext_macro('blkvm-setifempty'));
+                $ext->add($contextname, $extension, '', new ext_macro('prepend-cid', $config['cidnameprefix']));
+                $ext->add($contextname, $extension, '', new ext_setvar('__ALERT_INFO', $config['alertinfo']));
+                $ext->add($contextname, $extension, '', new ext_macro('dial',$config['timeout'].',${DIAL_OPTIONS},'.$extension));
+		$ext->add($contextname, $extension, '', new ext_goto($config['timeout_destination']));
+		$ext->add($contextname, $extension, '', new ext_gotoif('${DIALSTATUS}"="NOANSWER"]',$config['timeout_destination']));
+		$ext->add($contextname, $extension, '', new ext_gotoif('${DIALSTATUS}"="BUSY"]',$config['busy_destination']));
+		$ext->add($contextname, $extension, '', new ext_gotoif('${DIALSTATUS}"="CHANUNAVAIL"]',$config['unavailable_destination']));
             }
             # Add common destination
             $ext->add($contextname, 'commondest', '' , new ext_noop('end'));
