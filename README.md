@@ -1,9 +1,13 @@
 # DirectDID FreePBX Module
 DirectDID FreePBX module allow to configure direct did with alternative destinations in case of failure.
 This module is useful When a DID Number with pattern is created (like _1234567XX) and we want to direct all numbers that match the pattern to an extension like:
+
 123456700 -> 300
+
 123456701 -> 301
+
 123456722 -> 322
+
 ...
 
 This could already be done using direct did on extension option, but configuring it with this module is faster and also allow to chose a different failure destination that overrides the extension's
