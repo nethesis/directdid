@@ -111,11 +111,6 @@ class Directdid implements \BMO
                         'id' => 'delete',
                         'value' => _('Delete')
                     ),
-                    'reset' => array(
-                        'name' => 'reset',
-                        'id' => 'reset',
-                        'value' => _('Reset')
-                    ),
                     'submit' => array(
                         'name' => 'submit',
                         'id' => 'submit',
@@ -174,13 +169,6 @@ class Directdid implements \BMO
             return false;
             break;
         }
-    }
-
-    // http://wiki.freepbx.org/display/FOP/Adding+Floating+Right+Nav+to+Your+Module
-    public function getRightNav($request)
-    {
-        $html = '<p>Custom HTML</p>';
-        return $html;
     }
 
     // http://wiki.freepbx.org/display/FOP/HTML+Output+from+BMO
