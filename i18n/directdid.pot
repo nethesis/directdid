@@ -1,7 +1,8 @@
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2018-03-15 11:53+0100\n"
+"POT-Creation-Date: 2018-04-12 14:55+0200\n"
 "PO-Revision-Date: 2018-03-15 12:03+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -14,23 +15,39 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: Directdid.class.php:81
+#: Directdid.class.php:112
+msgid "Delete"
+msgstr ""
+
+#: Directdid.class.php:117
+msgid "Reset"
+msgstr ""
+
+#: Directdid.class.php:122
 msgid "Submit"
 msgstr ""
 
-#: Directdid.class.php:94
-msgid "Direct DID Options"
+#: Directdid.class.php:192
+msgid "Edit Direct DID"
+msgstr ""
+
+#: Directdid.class.php:195 views/bootnav.php:2
+msgid "Add Direct DID"
+msgstr ""
+
+#: Directdid.class.php:200
+msgid "Direct DID List"
 msgstr ""
 
 #: install.php:23
 msgid "Creating the database table"
 msgstr ""
 
-#: install.php:48
+#: install.php:44
 msgid "Table Created"
 msgstr ""
 
-#: install.php:50 uninstall.php:36
+#: install.php:46 uninstall.php:36
 msgid "Something went wrong"
 msgstr ""
 
@@ -42,61 +59,86 @@ msgstr ""
 msgid "Table Deleted"
 msgstr ""
 
-#: views/default.php:24
+#: views/bootnav.php:1
+msgid "List Direct DID"
+msgstr ""
+
+#: views/default.php:2
 msgid "Direct DID"
 msgstr ""
 
-#: views/form.php:34
+#: views/form.php:67
+msgid "DID Root"
+msgstr ""
+
+#: views/form.php:75
+msgid ""
+"This is the root of the directdid. If DID is _12345678XX, root is _12345678. "
+"This field is just a useful lable, can be empty and is not important for the "
+"overall operation"
+msgstr ""
+
+#: views/form.php:83
+msgid "Variable Length"
+msgstr ""
+
+#: views/form.php:91
+msgid ""
+"This is the number of digit that are variable in the DID and correspond to "
+"the number of \"X\" in the DID. If the DID is _12345678XX, Variable length "
+"is 2"
+msgstr ""
+
+#: views/form.php:99
+msgid "Extension Prefix"
+msgstr ""
+
+#: views/form.php:107
+msgid ""
+"This is the number to prepend to the variable to obtain the extension "
+"number. If DID is _12345678XX, and 3 digit extensions are used with "
+"extension number 2XX, Extension Prefix is 2. If variable is 2 and "
+"extensions are of two digit, this field is empty"
+msgstr ""
+
+#: views/form.php:116
 msgid "Timeout"
 msgstr ""
 
-#: views/form.php:44
+#: views/form.php:126
 msgid ""
 "Ringing timeout before going to timeout destination. Minimum value: 5 "
-"Maximum value: 30"
+"Maximum value: 60"
 msgstr ""
-"Tempo di squillo prima di andare nella destinazione di timeout. Valore "
-"minimo: 5, valore massimo: 20"
 
-#: views/form.php:58
+#: views/form.php:140
 msgid "Timeout Destination"
 msgstr ""
 
-#: views/form.php:68
+#: views/form.php:150
 msgid "Destination when timeout is reached"
 msgstr ""
 
-#: views/form.php:76
+#: views/form.php:158
 msgid "Busy Destination"
 msgstr ""
 
-#: views/form.php:86
-msgid "Destination if user is busy"
+#: views/form.php:168
+msgid "Destination if destination is busy"
 msgstr ""
 
-#: views/form.php:94
+#: views/form.php:176
 msgid "Unavailable Destination"
 msgstr ""
 
-#: views/form.php:104
-msgid "Destination if user is not reachable"
+#: views/form.php:186
+msgid "Destination if destination is unavailable"
 msgstr ""
 
-#: views/form.php:112
-msgid "Alert Info"
+#: views/grid.php:30
+msgid "DID"
 msgstr ""
 
-#: views/form.php:120
-msgid "ALERT_INFO can be used for distinctive ring with SIP devices."
-msgstr ""
-
-#: views/form.php:128
-msgid "CID Name Prefix"
-msgstr ""
-
-#: views/form.php:136
-msgid ""
-"You can optionally prefix the CallerID name when ringing extensions in this "
-"group. ie: If you prefix with \"Sales:\", a call from John Doe would display "
-"as \"Sales:John Doe\" on the extensions that ring."
+#: views/grid.php:31
+msgid "Actions"
 msgstr ""

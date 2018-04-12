@@ -20,13 +20,95 @@
 #
 -->
 
-<form action="" method="post" class="fpbx-submit" id="hwform" name="hwform" data-fpbx-delete="config.php?display=directdid&action=delete&id=<?php echo $id?>">
-<input type="hidden" name='action' value="<?php echo $id?'edit':'save' ?>">
+<form action="config.php?display=directdid" method="post" class="fpbx-submit" id="hwform" name="hwform" data-fpbx-delete="config.php?display=directdid">
+<input type="hidden" name='action' value="<?php echo $_REQUEST['id']?'edit':'add' ?>">
 
-<?php $config = directdid_get_details(); ?>
+<?php
+if (isset($_REQUEST['id'])) {
+    $config = directdid_get_details($_REQUEST['id']);
+    echo("<input type='hidden' name='id' value='".$_REQUEST['id']."'>");
+} else {
+    $config['timeout'] = 15;
+    $config['timeout_destination'] = 'app-blackhole,hangup,1';
+    $config['busy_destination'] = 'app-blackhole,hangup,1';
+    $config['unavailable_destination'] = 'app-blackhole,hangup,1';
+    $config['root'] = '';
+    //guess prefix and varlength searching in ext list
+    try {
+        $extensions = \FreePBX::Core()->getAllUsers();
+        $extensions = array_keys($extensions);
+        $extarr = array();
+        foreach ($extensions as $i => $ext) {
+            if (preg_match('/^9...*/',$ext)) {
+                continue;
+            }
+            $extarr[] = substr($ext,0,1);
+            $sumlen += strlen($ext) ;
+        }
+        $avglen = $sumlen / count($extarr);
+        $count=array_count_values($extarr);
+        arsort($count);
+        $keys=array_keys($count);
+        $config['prefix'] = (int) $keys[0];
+        $config['varlength'] = round($avglen-1);
+    } catch (Exception $e) {
+        $config['prefix'] = '2';
+        $config['varlength'] = 2;
+    }
+}
 
-<!--NAME-->
+?>
+
 <div class="element-container">
+    <!--ROOT-->
+    <div class="row">
+        <div class="form-group">
+            <div class="col-md-4">
+                <label class="control-label" for="root"><?php echo _("DID Root") ?></label>
+                <i class="fa fa-question-circle fpbx-help-icon" data-for="root"></i>
+            </div>
+            <div class="col-md-7">
+                <input type="text" class="form-control" id="root" name="root" value="<?php  echo $config['root'] ?>">
+            </div>
+        </div>
+        <div class="col-md-12">
+            <span id="root-help" class="help-block fpbx-help-block"><?php echo _('This is the root of the directdid. If DID is _12345678XX, root is _12345678. This field is just a useful lable, can be empty and is not important for the overall operation')?></span>
+        </div>
+    </div>
+    <!--END ROOT-->
+    <!--VARLENGTH-->
+     <div class="row">
+        <div class="form-group">
+            <div class="col-md-4">
+                <label class="control-label" for="varlength"><?php echo _("Variable Length") ?></label>
+                <i class="fa fa-question-circle fpbx-help-icon" data-for="varlength"></i>
+            </div>
+            <div class="col-md-7">
+                <input type="text" class="form-control" id="varlength" name="varlength" value="<?php  echo $config['varlength'] ?>">
+            </div>
+        </div>
+        <div class="col-md-12">
+            <span id="varlength-help" class="help-block fpbx-help-block"><?php echo _('This is the number of digit that are variable in the DID and correspond to the number of "X" in the DID. If the DID is _12345678XX, Variable length is 2')?></span>
+        </div>
+    </div>
+    <!--END VARLENGTH-->
+    <!--PREFIX-->
+    <div class="row">
+        <div class="form-group">
+            <div class="col-md-4">
+                <label class="control-label" for="prefix"><?php echo _("Extension Prefix") ?></label>
+                <i class="fa fa-question-circle fpbx-help-icon" data-for="prefix"></i>
+            </div>
+            <div class="col-md-7">
+                <input type="text" class="form-control" id="prefix" name="prefix" value="<?php echo $config['prefix'] ?>">
+            </div>
+        </div>
+        <div class="col-md-12">
+            <span id="prefix-help" class="help-block fpbx-help-block"><?php echo _('This is the number to prepend to the variable to obtain the extension number. If DID is _12345678XX, and 3 digit extensions are used with extension number 2XX, Extension Prefix is 2. If variable is 2 and extensions are of two digit, this field is empty')?></span>
+        </div>
+    </div>
+
+    <!--END PREFIX-->
     <!--TIMEOUT-->
     <div class="row">
         <div class="form-group">
@@ -35,13 +117,13 @@
                 <i class="fa fa-question-circle fpbx-help-icon" data-for="timeout"></i>
             </div>
             <div class="col-md-7">
-                <input type="number" min="5" max="30" class="form-control" id="timeout" name="timeout" value="<?php echo isset($config['timeout'])?$config['timeout']:10 ?>">
+                <input type="number" min="5" max="60" class="form-control" id="timeout" name="timeout" value="<?php echo $config['timeout'] ?>">
             </div>
         </div>    
     </div>
     <div class="row">
         <div class="col-md-12">
-            <span id="timeout-help" class="help-block fpbx-help-block"><?php echo _("Ringing timeout before going to timeout destination. Minimum value: 5 Maximum value: 30")?></span>
+            <span id="timeout-help" class="help-block fpbx-help-block"><?php echo _("Ringing timeout before going to timeout destination. Minimum value: 5 Maximum value: 60")?></span>
         </div>
     </div>
     <!--TIMEOUT END-->
@@ -72,7 +154,7 @@ echo $module_hook->hookHtml;
     <!--BUSY DESTINATION-->
     <div class="row">
         <div class="form-group">
-            <div class="col-md-4">
+            <div class="col-md-4"///>
                 <label class="control-label" for="busy_destination"><?php echo _("Busy Destination") ?></label>
                 <i class="fa fa-question-circle fpbx-help-icon" data-for="busy_destination"></i>
             </div>
@@ -83,7 +165,7 @@ echo $module_hook->hookHtml;
     </div>
     <div class="row">
         <div class="col-md-12">
-            <span id="busy_destination-help" class="help-block fpbx-help-block"><?php echo _("Destination if user is busy")?></span>
+            <span id="busy_destination-help" class="help-block fpbx-help-block"><?php echo _("Destination if destination is busy")?></span>
         </div>
     </div>
     <!--END BUSY DESTINATION-->
@@ -91,7 +173,7 @@ echo $module_hook->hookHtml;
     <div class="row">
         <div class="form-group">
             <div class="col-md-4">
-                <label class="control-label" for="unavailable_destination"><?php echo _("Unavailable Destination") ?></label>
+                <label class="control-label" for="unvailable_destination"><?php echo _("Unavailable Destination") ?></label>
                 <i class="fa fa-question-circle fpbx-help-icon" data-for="unavailable_destination"></i>
             </div>
             <div class="col-md-7">
@@ -101,40 +183,9 @@ echo $module_hook->hookHtml;
     </div>
     <div class="row">
         <div class="col-md-12">
-            <span id="unavailable_destination-help" class="help-block fpbx-help-block"><?php echo _("Destination if user is not reachable")?></span>
+            <span id="unavailable_destination-help" class="help-block fpbx-help-block"><?php echo _("Destination if destination is unavailable")?></span>
         </div>
     </div>
     <!--END UNAVAILABLE DESTINATION-->
-    <!--Alert Info-->
-    <div class="row">
-        <div class="form-group">
-            <div class="col-md-4">
-                <label class="control-label" for="alertinfo"><?php echo _("Alert Info") ?></label>
-                <i class="fa fa-question-circle fpbx-help-icon" data-for="alertinfo"></i>
-            </div>
-            <div class="col-md-7">
-                <?php echo FreePBX::View()->alertInfoDrawSelect("alertinfo",(!empty($config['alertinfo'])?$config['alertinfo']:''));?>
-            </div>
-        </div>
-        <div class="col-md-12">
-            <span id="alertinfo-help" class="help-block fpbx-help-block"><?php echo _("ALERT_INFO can be used for distinctive ring with SIP devices.")?></span>
-        </div>
-    </div>
-    <!--END Alert Info-->
-    <!--CID Name Prefix-->
-    <div class="row">
-        <div class="form-group">
-            <div class="col-md-4">
-                <label class="control-label" for="cidnameprefix"><?php echo _("CID Name Prefix") ?></label>
-                <i class="fa fa-question-circle fpbx-help-icon" data-for="cidnameprefix"></i>
-            </div>
-            <div class="col-md-7">
-                <input type="text" class="form-control" id="cidnameprefix" name="cidnameprefix" value="<?php  echo $config['cidnameprefix'] ?>">
-            </div>
-        </div>
-        <div class="col-md-12">
-            <span id="cidnameprefix-help" class="help-block fpbx-help-block"><?php echo _('You can optionally prefix the CallerID name when ringing extensions in this group. ie: If you prefix with "Sales:", a call from John Doe would display as "Sales:John Doe" on the extensions that ring.')?></span>
-        </div>
-    </div>
-    <!--END CID Name Prefix-->
+</div>
 </form>

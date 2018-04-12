@@ -25,22 +25,18 @@ out(_('Creating the database table'));
 $dbh = \FreePBX::Database();
 try {
     $sql = "CREATE TABLE IF NOT EXISTS directdid(
-    `keyword` VARCHAR(80) NOT NULL UNIQUE,
-    `value` VARCHAR(200));";
+    `id` INT(11) AUTO_INCREMENT PRIMARY KEY,
+    `timeout` INT(11) NOT NULL DEFAULT 15,
+    `timeout_destination` VARCHAR(80) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'app-blackhole,hangup,1',
+    `busy_destination` VARCHAR(80) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'app-blackhole,hangup,1',
+    `unavailable_destination` VARCHAR(80) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'app-blackhole,hangup,1',
+    `root` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+    `prefix` varchar(3) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+    `varlength` INT(2) NOT NULL DEFAULT 2
+    );";
     $sth = $dbh->prepare($sql);
     $result = $sth->execute();
 
-    # Default values
-    $sqls = array();
-    $sqls[] = "INSERT IGNORE INTO directdid (`keyword`,`value`) VALUES ('timeout','10')";
-    $sqls[] = "INSERT IGNORE INTO directdid (`keyword`,`value`) VALUES ('timeout_destination','app-blackhole,hangup,1')";
-    $sqls[] = "INSERT IGNORE INTO directdid (`keyword`,`value`) VALUES ('busy_destination','app-blackhole,hangup,1')";
-    $sqls[] = "INSERT IGNORE INTO directdid (`keyword`,`value`) VALUES ('unavailable_destination','app-blackhole,hangup,1')";
-    $sqls[] = "INSERT IGNORE INTO directdid (`keyword`,`value`) VALUES ('cidnameprefix','EXTERNAL')";
-    foreach ($sqls as $sql) {
-        $sth = $dbh->prepare($sql);
-        $result = $sth->execute();
-    }
 } catch (PDOException $e) {
     $result = $e->getMessage();
 }

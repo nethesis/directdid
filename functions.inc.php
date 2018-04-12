@@ -22,23 +22,28 @@
 
 function directdid_destinations() {
     global $amp_conf;
-    $results = core_users_list();
+    $results = \FreePBX::Directdid()->directdid_get();
     if (isset($results)) {
-	foreach($results as $result) {
-            # show only main extensions
-            if (preg_match('/^9[0-9][0-9][0-9][0-9]/',$result['0'])) continue;
-	    $extens[] = array('destination' => 'directdid,'.$result['0'].',1','description' => ' '.$result['0'].' '.$result['1'], 'category' => $cat, 'id' => $cat_id);
+	foreach($results as $did) {
+            $x = '';
+            $name = $did['root'];
+            for ($i = 0; $i < $did['varlength']; $i++) {
+                $x .= 'X';
+            }
+            $name .= $x.' -> '.$did['prefix'].$x;
+	    $extens[] = array('destination' => 'directdid-'.$did['id'].',${EXTEN},1','description' => $name, 'category' => 'DirectDID', 'id' => $did['id'],'edit_url' => 'config.php?display=directdid&view=form&id='.$did['id']);
 	}
         return $extens;
     }
 }
 
-function directdid_getdestinfo() {
+function directdid_getdestinfo($dest) {
     global $active_modules;
-    if (preg_match('/^directdid/',trim($dest))) {
-        return array('description' => "DirectDID", 'edit_url' => 'config.php?display=directdid');
+    if (substr(trim($dest),0,10) == 'directdid-') {
+        $id = preg_replace('/directdid-([0-9]*),.*/','${1}',$dest);
+        return array('description' => "DirectDID", 'edit_url' => 'config.php?display=directdid&view=form&id='.$id);
     }
-    return false;
+    return array('description' => "DirectDID", 'edit_url' => 'config.php?display=directdid');
 }
 
 function directdid_get_config($engine){
@@ -46,52 +51,31 @@ function directdid_get_config($engine){
     global $asterisk_conf;
     switch($engine) {
         case "asterisk":
-            $contextname = 'directdid';
-            $results = core_users_list();
-            $config = directdid_get_details();
-            /************ Example of $config *************************************
-            * $config['alertinfo'] = dghj
-            * $config['busy_destination'] = app-blackhole,hangup,1
-            * $config['cidnameprefix'] = EXTERNAL
-            * $config['timeout'] => 6
-            * $config['timeout_destination'] => app-blackhole,hangup,1
-            * $config['unavailable_destination'] => app-blackhole,no-service,1
-            **********************************************************************/
-    
-            foreach ($results as $result) {
-                # show only main extensions
-                if (preg_match('/^9[0-9][0-9][0-9][0-9]/',$result['0'])) continue;
-                # add ring and stuff foreach extension
-		$extension = $result['0'];
-		$ext->add($contextname, $extension, '', new ext_playtones('ring'));
+            $results = \FreePBX::Directdid()->directdid_get();
+            $extension = '_XXXX.';
+            foreach ($results as $did) {
+                $contextname = 'directdid-'.$did['id'];
+                $ext->add($contextname, $extension, '', new ext_playtones('ring'));
                 $ext->add($contextname, $extension, '', new ext_progress());
                 $ext->add($contextname, $extension, '', new ext_macro('user-callerid'));
-                $ext->add($contextname, $extension, '', new ext_macro('blkvm-setifempty'));
-                $ext->add($contextname, $extension, '', new ext_macro('prepend-cid', $config['cidnameprefix']));
-                $ext->add($contextname, $extension, '', new ext_setvar('__ALERT_INFO', $config['alertinfo']));
-                $ext->add($contextname, $extension, '', new ext_macro('dial',$config['timeout'].',${DIAL_OPTIONS},'.$extension));
-		$ext->add($contextname, $extension, '', new ext_goto($config['timeout_destination']));
-		$ext->add($contextname, $extension, '', new ext_gotoif('${DIALSTATUS}"="NOANSWER"]',$config['timeout_destination']));
-		$ext->add($contextname, $extension, '', new ext_gotoif('${DIALSTATUS}"="BUSY"]',$config['busy_destination']));
-		$ext->add($contextname, $extension, '', new ext_gotoif('${DIALSTATUS}"="CHANUNAVAIL"]',$config['unavailable_destination']));
+                $ext->add($contextname, $extension, '', new ext_noop('${EXTEN}'));
+                $ext->add($contextname, $extension, '', new ext_macro('dial',$did['timeout'].',${DIAL_OPTIONS},'.$did['prefix'].'${EXTEN:-'.$did['varlength'].'}'));
+                $ext->add($contextname, $extension, '', new ext_gotoif('${DIALSTATUS}"="NOANSWER"]',$did['timeout_destination']));
+                $ext->add($contextname, $extension, '', new ext_gotoif('${DIALSTATUS}"="BUSY"]',$did['busy_destination']));
+                $ext->add($contextname, $extension, '', new ext_gotoif('${DIALSTATUS}"="CHANUNAVAIL"]',$did['unavailable_destination']));
+
             }
-            # Add common destination
-            $ext->add($contextname, 'commondest', '' , new ext_noop('end'));
         break;
     }
 }
 
-function directdid_get_details() {
+function directdid_get_details($id) {
     $dbh = FreePBX::Database();
-    $sql = 'SELECT * FROM directdid';
+    $sql = 'SELECT * FROM directdid WHERE id = ?';
     $sth = $dbh->prepare($sql);
-    $sth->execute(array());
-    $res = $sth->fetchAll();
-    foreach ($res as $row) {
-        $config[$row['keyword']] = $row['value'];
-    }
-    /*NethDEBUG*/ file_put_contents("/tmp/php_debug.log",__FUNCTION__.'@'.print_r(      $config      ,true)."@\n",FILE_APPEND); /*NethDEBUG*/
-    return $config;
+    $sth->execute(array($id));
+    $res = $sth->fetchAll()[0];
+    return $res;
 }
 
 
