@@ -52,7 +52,7 @@ function directdid_get_config($engine){
     switch($engine) {
         case "asterisk":
             $results = \FreePBX::Directdid()->directdid_get();
-            $extension = '_XXXX.';
+            $extension = '_!XXX.';
             foreach ($results as $did) {
                 $contextname = 'directdid-'.$did['id'];
                 $ext->add($contextname, $extension, '', new ext_playtones('ring'));
