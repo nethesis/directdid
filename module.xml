@@ -2,7 +2,7 @@
   <rawname>directdid</rawname>
   <repo>unsupported</repo>
   <name>Direct DID</name>
-  <version>1.1.2</version>
+  <version>1.1.3</version>
   <category>Applications</category>
   <Publisher>Stefano Fancello</Publisher>
   <info></info>
@@ -12,9 +12,9 @@
     <directdid>Direct DID</directdid>
 </menuitems>
 <depends>
-  <version>14.0.0</version>
+  <version>14</version>
 </depends>
-<supported>14.0.0</supported>
+<supported>14.0</supported>
 
 <description>Allow to configure Direct DID for all extensions</description>
 <changelog></changelog>
