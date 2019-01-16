@@ -53,17 +53,20 @@ function directdid_get_config($engine){
         case "asterisk":
             $results = \FreePBX::Directdid()->directdid_get();
             $extension = '_!XXX.';
+	    $extension2 = '_X.';
             foreach ($results as $did) {
-                $contextname = 'directdid-'.$did['id'];
+		$contextname = 'directdid-'.$did['id'];
                 $ext->add($contextname, $extension, '', new ext_playtones('ring'));
                 $ext->add($contextname, $extension, '', new ext_progress());
                 $ext->add($contextname, $extension, '', new ext_macro('user-callerid'));
                 $ext->add($contextname, $extension, '', new ext_noop('${EXTEN}'));
-                $ext->add($contextname, $extension, '', new ext_macro('dial',$did['timeout'].',${DIAL_OPTIONS},'.$did['prefix'].'${EXTEN:-'.$did['varlength'].'}'));
-                $ext->add($contextname, $extension, '', new ext_gotoif('${DIALSTATUS}"="NOANSWER"]',$did['timeout_destination']));
-                $ext->add($contextname, $extension, '', new ext_gotoif('${DIALSTATUS}"="BUSY"]',$did['busy_destination']));
-                $ext->add($contextname, $extension, '', new ext_gotoif('${DIALSTATUS}"="CHANUNAVAIL"]',$did['unavailable_destination']));
+                $ext->add($contextname, $extension, '', new ext_goto('directdid-'.$did['id'].'-call,'.$did['prefix'].'${EXTEN:-'.$did['varlength'].'},1'));
 
+                $contextname = 'directdid-'.$did['id'].'-call';
+                $ext->add($contextname, $extension2, '', new ext_macro('dial',$did['timeout'].',${DIAL_OPTIONS},${EXTEN}'));
+                $ext->add($contextname, $extension2, '', new ext_gotoif('${DIALSTATUS}"="NOANSWER"]',$did['timeout_destination']));
+                $ext->add($contextname, $extension2, '', new ext_gotoif('${DIALSTATUS}"="BUSY"]',$did['busy_destination']));
+                $ext->add($contextname, $extension2, '', new ext_gotoif('${DIALSTATUS}"="CHANUNAVAIL"]',$did['unavailable_destination']));
             }
         break;
     }
