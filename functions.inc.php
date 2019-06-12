@@ -60,7 +60,7 @@ function directdid_get_config($engine){
                 $ext->add($contextname, $extension, '', new ext_progress());
                 $ext->add($contextname, $extension, '', new ext_macro('user-callerid'));
                 $ext->add($contextname, $extension, '', new ext_noop('${EXTEN}'));
-                $ext->add($contextname, $extension, '', new ext_goto('directdid-'.$did['id'].'-call,'.$did['prefix'].'${EXTEN:-'.$did['varlength'].'},1'));
+		$ext->add($contextname, $extension, '', new ext_goto('directdid-'.$did['id'].'-call,'.$did['prefix'].'${FROM_DID:-'.$did['varlength'].'},1'));
 
                 $contextname2 = 'directdid-'.$did['id'].'-call';
                 $ext->add($contextname2, $extension2, '', new ext_set('CDR(dst_cnam)','${DB(AMPUSER/${EXTEN}/cidname)}'));
