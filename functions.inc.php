@@ -56,6 +56,7 @@ function directdid_get_config($engine){
             $extension2 = '_X.';
             foreach ($results as $did) {
                 $contextname = 'directdid-'.$did['id'];
+                $ext->add($contextname, $extension, '', new ext_answer());
                 $ext->add($contextname, $extension, '', new ext_playtones('ring'));
                 $ext->add($contextname, $extension, '', new ext_progress());
                 $ext->add($contextname, $extension, '', new ext_macro('user-callerid'));
