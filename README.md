@@ -1,3 +1,7 @@
+# OBSOLETE!
+
+The module is now here https://github.com/nethesis/ns8-nethvoice
+
 # DirectDID FreePBX Module
 DirectDID FreePBX module allow to configure direct did with alternative destinations in case of failure.
 This module is useful When a DID Number with pattern is created (like _1234567XX) and we want to direct all numbers that match the pattern to an extension like:
